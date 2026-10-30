@@ -1,0 +1,11 @@
+{
+  "name": "Down We Fall",
+  "short_name": "Down We Fall",
+  "description": "A dark, twisted Wonderland action platformer.",
+  "start_url": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#07030d",
+  "theme_color": "#07030d",
+  "icons": [{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any"}]
+}

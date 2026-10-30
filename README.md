@@ -2,7 +2,7 @@
 
 ### *A twisted Wonderland action platformer — 12 realms, 72 stages, 36 bosses. One file. Plays on your phone.*
 
-**▶ Play it:** `https://DrakeDragon.github.io/DownWeFall/`
+**▶ Play it:** `https://YOUR-USERNAME.github.io/YOUR-REPO/`
 
 Down We Fall is a fast, modern, mobile-first platformer set in a dark and broken Wonderland. The Queen of Hearts has stolen Alice's twelve Hours, and each one is held by a nightmare keeper at the bottom of a different realm. Fall through every realm, take the Hours back, and find out why the hole never ends.
 
@@ -30,7 +30,7 @@ It is one self-contained `index.html`: no build step, no assets, no dependencies
 ## 🎮 Controls
 
 ### Touch (phones and tablets)
-Landscape is recommended. The on-screen pad appears only during play.
+The game always plays in landscape. On Android it requests a landscape lock on your first tap; on any phone held (or locked) in portrait, the whole game rotates itself to fill the screen, so just turn the phone sideways. The on-screen pad appears only during play.
 
 | Button | Action |
 |---|---|
@@ -106,7 +106,7 @@ Levels are always completable with base moves, so powers make you faster and saf
 ## 🚀 Deploy to GitHub Pages
 
 1. Create a new GitHub repository (public).
-2. Upload `index.html`, `README.md` and the empty `.nojekyll` file to the repository root.
+2. Upload all the files from the folder (`index.html`, `manifest.webmanifest`, `icon.svg`, `README.md` and the empty `.nojekyll`) to the repository root.
 3. Go to **Settings → Pages**.
 4. Under **Build and deployment**, set **Source** to *Deploy from a branch*, choose **main** and **/ (root)**, then **Save**.
 5. Wait a minute or two. Your game is live at `https://YOUR-USERNAME.github.io/YOUR-REPO/`.

@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Down We Fall</title>
+<link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#07030d">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -41,6 +42,17 @@ canvas{width:100%;height:auto;display:block;background:#000;border-bottom:2px so
  #ba{width:78px;height:78px;right:128px;bottom:18px;font-size:28px}
  #bd{width:72px;height:72px;right:84px;bottom:122px;font-size:24px}
 }
+/* forced landscape: page is rotated when a touch device is held in portrait */
+html.rot #wrap{position:fixed;left:0;top:0;transform-origin:0 0;max-width:none;flex-direction:row}
+ html.rot #wrap{max-width:none;flex-direction:row;position:relative}
+ html.rot canvas{height:100%;width:auto;margin:0 auto;border:0}
+ html.rot #pad{position:absolute;inset:0;pointer-events:none}
+ html.rot .btn{pointer-events:auto;opacity:.7}
+ html.rot #bl,html.rot #br{width:84px;height:84px;font-size:32px;bottom:10px}
+ html.rot #bl{left:14px}html.rot #br{left:108px}
+ html.rot #bj{width:100px;height:100px;right:16px;bottom:10px;font-size:18px}
+ html.rot #ba{width:78px;height:78px;right:128px;bottom:18px;font-size:28px}
+ html.rot #bd{width:72px;height:72px;right:84px;bottom:122px;font-size:24px}
 </style>
 </head>
 <body>
@@ -149,9 +161,38 @@ function bindBtn(id,k){
 }
 bindBtn('bl','l');bindBtn('br','r');bindBtn('bj','j');bindBtn('ba','a');bindBtn('bd','d');
 cv.addEventListener('pointerdown',e=>{
-  const r=cv.getBoundingClientRect();
-  tap({x:(e.clientX-r.left)/r.width*W,y:(e.clientY-r.top)/r.height*H});
+  if(document.documentElement.classList.contains('rot')){
+    const lx=e.clientY,ly=innerWidth-e.clientX;
+    tap({x:(lx-cv.offsetLeft)/cv.offsetWidth*W,y:(ly-cv.offsetTop)/cv.offsetHeight*H});
+  }else{
+    const r=cv.getBoundingClientRect();
+    tap({x:(e.clientX-r.left)/r.width*W,y:(e.clientY-r.top)/r.height*H});
+  }
+  tryLandscape();
 });
+/* ---- landscape forcing ---- */
+let lsTried=0;
+function tryLandscape(){ // Android Chrome: fullscreen + orientation lock (needs a tap). iPhone can't lock, so the rotate fallback below handles it.
+  if(lsTried>2)return;lsTried++;
+  try{
+    const de=document.documentElement,go=()=>{try{const p=screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape');if(p&&p.catch)p.catch(()=>{})}catch(e){}};
+    if(de.requestFullscreen&&!document.fullscreenElement){const q=de.requestFullscreen();if(q&&q.then)q.then(go,go);else go()}else go();
+  }catch(e){}
+}
+function fitOrient(){
+  const de=document.documentElement,wrap=document.getElementById('wrap');if(!wrap)return;
+  const touch=window.matchMedia&&matchMedia('(pointer:coarse)').matches;
+  const portrait=innerHeight>innerWidth;
+  if(touch&&portrait){
+    de.classList.add('rot');
+    wrap.style.width=innerHeight+'px';wrap.style.height=innerWidth+'px';
+    wrap.style.transform='translateX('+innerWidth+'px) rotate(90deg)';
+  }else{
+    de.classList.remove('rot');wrap.style.width='';wrap.style.height='';wrap.style.transform='';
+  }
+}
+addEventListener('resize',fitOrient);addEventListener('orientationchange',()=>setTimeout(fitOrient,120));
+fitOrient();
 function syncPad(){const d=document.getElementById('bd');if(d)d.classList.toggle('lock',!has('dash'))}
 /* ---------- realms ---------- */
 // pal: sky[2], far, near, ground, top, brick, brickD, moon, spike, decor
